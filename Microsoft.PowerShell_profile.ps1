@@ -22,7 +22,6 @@ Set-PSReadLIneOption -EditMode Windows
 Set-Alias -Name vim -Value nvim
 Set-Alias -Name eth -Value get-netadapter
 Set-Alias -Name netprofile -value Get-NetConnectionProfile
-Set-Alias -Name refresh -value refreshenv
 
 ##Functions##
 function .. {cd .. }
