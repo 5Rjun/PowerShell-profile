@@ -22,6 +22,7 @@ Set-PSReadLIneOption -EditMode Windows
 Set-Alias -Name vim -Value nvim
 Set-Alias -Name eth -Value get-netadapter
 Set-Alias -Name netprofile -value Get-NetConnectionProfile
+Set-Alias -Name refresh -value refreshenv
 
 ##Functions##
 function .. {cd .. }
@@ -64,6 +65,10 @@ function dirs {
 function which($name) {
     Get-Command $name | Select-Object -ExpandProperty Definition
 }
+
+# To Copy Contents of a text file
+function dcopy($name) {type  $name | clip}
+
 ##Scoop Functions##
 function cleanup { 
     scoop cleanup *
@@ -86,7 +91,7 @@ function wsearch($name) {
     winget search $name
     }
 function winstall($name) {
-    winget install $name
+    winget install $name --source winget
     }
 function wupgrade-all {
     winget upgrade --include-unknown
