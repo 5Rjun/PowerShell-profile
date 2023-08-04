@@ -22,13 +22,18 @@ Set-PSReadLIneOption -EditMode Windows
 Set-Alias -Name vim -Value nvim
 Set-Alias -Name eth -Value get-netadapter
 Set-Alias -Name netprofile -value Get-NetConnectionProfile
-Set-Alias -Name refresh -value refreshenv
+Set-Alias -Name lt -Value tree
 
 ##Functions##
 function .. {cd .. }
 function ... {cd ../..}
 function cd... { Set-Location ..\.. }
 function cd.... { Set-Location ..\..\.. }
+
+function md5 { Get-FileHash -Algorithm MD5 $args }
+function sha1 { Get-FileHash -Algorithm SHA1 $args }
+function sha256 { Get-FileHash -Algorithm SHA256 $args }
+function sha256 { Get-FileHash -Algorithm SHA512 $args }
 
 
 function winenv {
@@ -91,13 +96,13 @@ function wsearch($name) {
     winget search $name
     }
 function winstall($name) {
-    winget install $name --source winget
+    winget install $name 
     }
 function wupgrade-all {
     winget upgrade --include-unknown
     }
 function wupgrade($name) {
-    winget upgrade $name
+    winget upgrade $name 
     }
 function wuninstall($name) {
     winget uninstall  $name
