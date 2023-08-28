@@ -23,6 +23,8 @@ Set-Alias -Name vim -Value nvim
 Set-Alias -Name eth -Value get-netadapter
 Set-Alias -Name netprofile -value Get-NetConnectionProfile
 Set-Alias -Name lt -Value tree
+Set-Alias -Name su -Value admin
+Set-Alias -Name sudo -Value admin
 
 ##Functions##
 function .. {cd .. }
@@ -35,6 +37,17 @@ function sha1 { Get-FileHash -Algorithm SHA1 $args }
 function sha256 { Get-FileHash -Algorithm SHA256 $args }
 function sha512 { Get-FileHash -Algorithm SHA512 $args }
 
+# Simple function to start a new elevated process. If arguments are supplied then 
+# a single command is started with admin rights; if not then a new admin instance
+# of PowerShell is started.
+function admin {
+    if ($args.Count -gt 0) {   
+        $argList = "& '" + $args + "'"
+        Start-Process "$psHome\pwsh.exe" --nologo -Verb runAs -ArgumentList $argList
+    } else {
+        Start-Process "$psHome\pwsh.exe" --nologo -Verb runAs
+    }
+}
 
 function winenv {
     rundll32.exe sysdm.cpl,EditEnvironmentVariables
@@ -96,13 +109,13 @@ function wsearch($name) {
     winget search $name
     }
 function winstall($name) {
-    winget install $name 
+    winget install $name --source winget 
     }
 function wupgrade-all {
     winget upgrade --include-unknown
     }
 function wupgrade($name) {
-    winget upgrade $name 
+    winget upgrade $name --source winget
     }
 function wuninstall($name) {
     winget uninstall  $name
@@ -119,3 +132,4 @@ $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
   Import-Module "$ChocolateyProfile"
 }
+
