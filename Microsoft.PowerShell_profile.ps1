@@ -6,10 +6,6 @@ if ($host.Name -eq 'ConsoleHost')
     Import-Module PSReadLine
 }
 
-##Starship-Prompt##
-Invoke-Expression (&starship init powershell)
-$ENV:STARSHIP_CONFIG = "$HOME\.config\starship.toml"
-
 
 
 Import-Module -Name Terminal-Icons
@@ -36,17 +32,29 @@ function sha1 { Get-FileHash -Algorithm SHA1 $args }
 function sha256 { Get-FileHash -Algorithm SHA256 $args }
 function sha512 { Get-FileHash -Algorithm SHA512 $args }
 
+function winutil {irm https://christitus.com/win | iex}
+
 # Simple function to start a new elevated process. If arguments are supplied then 
 # a single command is started with admin rights; if not then a new admin instance
 # of PowerShell is started.
+
+#function sudo {
+#    if ($args.Count -gt 0) {   
+#        $argList = "& '" + $args + "'"
+#        Start-Process "$psHome\pwsh.exe" --nologo  -Verb runAs -ArgumentList $argList
+#    } else {
+#        Start-Process "$psHome\pwsh.exe" --nologo -Verb runAs
+#    }
+#}
+
 function sudo {
-    if ($args.Count -gt 0) {   
-        $argList = "& '" + $args + "'"
-        Start-Process "$psHome\pwsh.exe" --nologo -Verb runAs -ArgumentList $argList
-    } else {
-        Start-Process "$psHome\pwsh.exe" --nologo -Verb runAs
-    }
-}
+     if ($args.Count -gt 0) {
+         $argList = "& '" + $args + "'"
+         Start-Process wt -Verb runAs -ArgumentList $argList
+     } else {
+         Start-Process wt -Verb runAs
+     }
+ }
 
 function winenv {
     rundll32.exe sysdm.cpl,EditEnvironmentVariables
@@ -69,6 +77,11 @@ function pgrep($name) {
 function Get-PubIP {
     (Invoke-WebRequest http://ifconfig.me/ip ).Content
 }
+
+function cclip {
+    Set-Clipboard -Value $null
+}
+
 
 # Does the the rough equivalent of dir /s /b. For example, dirs *.png is dir /s /b *.png
 function dirs {
@@ -107,8 +120,11 @@ function uninstall($name) {
 function wsearch($name) {
     winget search $name
     }
-function winstall($name) {
-    winget install $name --source winget 
+##function winstall($name) {
+##    winget install $name --source winget 
+##    }
+function winstall($name){
+    winget install --id=$name -e
     }
 function wupgrade-all {
     winget upgrade --include-unknown
@@ -120,6 +136,9 @@ function wuninstall($name) {
     winget uninstall  $name
     }
 
+##Starship-Prompt##
+Invoke-Expression (&starship init powershell)
+$ENV:STARSHIP_CONFIG = "$HOME\.config\starship.toml"
 
 
 # Import the Chocolatey Profile that contains the necessary code to enable
